@@ -27,7 +27,7 @@ export function Login() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data);
+      // await login(data);
       navigate('/');
     } catch (err) {
       console.error("Login failed", err);

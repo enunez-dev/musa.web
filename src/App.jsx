@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { Dashboard } from '@/pages/Dashboard'
 import { Login } from '@/pages/Login'
 import { NotFound } from '@/pages/NotFound'
@@ -25,27 +26,29 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="employees" element={<EmployeesList />} />
-            <Route path="employees/new" element={<EmployeeForm />} />
-            <Route path="employees/:id/edit" element={<EmployeeForm />} />
-            <Route path="products" element={<ProductsList />} />
-            <Route path="products/new" element={<ProductForm />} />
-            <Route path="products/:id/edit" element={<ProductForm />} />
-            <Route path="services" element={<ServicesList />} />
-            <Route path="services/new" element={<ServiceForm />} />
-            <Route path="services/:id/edit" element={<ServiceForm />} />
-            <Route path="inventory/warehouses" element={<WarehousesList />} />
-            <Route path="inventory/warehouses/new" element={<WarehouseForm />} />
-            <Route path="inventory/warehouses/:id/edit" element={<WarehouseForm />} />
-            <Route path="inventory/suppliers" element={<SuppliersList />} />
-            <Route path="inventory/suppliers/new" element={<SupplierForm />} />
-            <Route path="inventory/suppliers/:id/edit" element={<SupplierForm />} />
-            <Route path="inventory/purchases" element={<PurchasesList />} />
-            <Route path="inventory/purchases/new" element={<PurchaseForm />} />
-            <Route path="sales" element={<SalesList />} />
-            <Route path="sales/new" element={<SalesForm />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="employees" element={<EmployeesList />} />
+              <Route path="employees/new" element={<EmployeeForm />} />
+              <Route path="employees/:id/edit" element={<EmployeeForm />} />
+              <Route path="products" element={<ProductsList />} />
+              <Route path="products/new" element={<ProductForm />} />
+              <Route path="products/:id/edit" element={<ProductForm />} />
+              <Route path="services" element={<ServicesList />} />
+              <Route path="services/new" element={<ServiceForm />} />
+              <Route path="services/:id/edit" element={<ServiceForm />} />
+              <Route path="inventory/warehouses" element={<WarehousesList />} />
+              <Route path="inventory/warehouses/new" element={<WarehouseForm />} />
+              <Route path="inventory/warehouses/:id/edit" element={<WarehouseForm />} />
+              <Route path="inventory/suppliers" element={<SuppliersList />} />
+              <Route path="inventory/suppliers/new" element={<SupplierForm />} />
+              <Route path="inventory/suppliers/:id/edit" element={<SupplierForm />} />
+              <Route path="inventory/purchases" element={<PurchasesList />} />
+              <Route path="inventory/purchases/new" element={<PurchaseForm />} />
+              <Route path="sales" element={<SalesList />} />
+              <Route path="sales/new" element={<SalesForm />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

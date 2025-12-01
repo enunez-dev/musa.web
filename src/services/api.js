@@ -1,3 +1,14 @@
+import mockApi from './mockApi';
+
+// Use mockApi instead of axios
+const api = mockApi;
+
+// Interceptors are not needed for mockApi as it's a simple object, 
+// but if we wanted to simulate them we'd need a wrapper. 
+// For now, we just export the mock object directly.
+// The real axios code is commented out below for reference.
+
+/*
 import axios from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -32,5 +43,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+*/
 
 export default api;

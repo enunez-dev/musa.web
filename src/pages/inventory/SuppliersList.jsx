@@ -5,53 +5,53 @@ import Pagination from '@/components/ui/Pagination';
 import api from '@/services/api';
 import { Edit, Trash2, Plus } from 'lucide-react';
 
-export const EmployeesList = () => {
-  const [employees, setEmployees] = useState([]);
+export const SuppliersList = () => {
+  const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
 
   useEffect(() => {
-    fetchEmployees(currentPage);
+    fetchSuppliers(currentPage);
   }, [currentPage]);
 
-  const fetchEmployees = async (page) => {
+  const fetchSuppliers = async (page) => {
     setLoading(true);
     try {
-      const response = await api.get(`/employees?page=${page}&limit=${limit}`);
-      console.log('Employees API Response:', response.data); // Debugging
-      setEmployees(response.data.data || []);
+      const response = await api.get(`/suppliers?page=${page}&limit=${limit}`);
+      console.log('Suppliers API Response:', response.data);
+      setSuppliers(response.data.data || []);
       setTotalPages(response.data.pagination?.totalPages || 1);
     } catch (error) {
-      console.error('Error fetching employees:', error);
+      console.error('Error fetching suppliers:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this employee?')) {
+    if (window.confirm('Are you sure you want to delete this supplier?')) {
       try {
-        await api.delete(`/employees/${id}`);
-        fetchEmployees(currentPage);
+        await api.delete(`/suppliers/${id}`);
+        fetchSuppliers(currentPage);
       } catch (error) {
-        console.error('Error deleting employee:', error);
+        console.error('Error deleting supplier:', error);
       }
     }
   };
 
   const columns = [
     { header: 'Name', accessor: 'name' },
-    { header: 'Email', accessor: 'email' },
-    { header: 'Role', accessor: 'role' },
+    { header: 'Contact Person', accessor: 'contact_info' },
     { header: 'Phone', accessor: 'phone' },
+    { header: 'Email', accessor: 'email' },
   ];
 
   const actions = (row) => (
     <>
       <Link
-        to={`/employees/${row.id}/edit`}
+        to={`/inventory/suppliers/${row.id}/edit`}
         className="hover:text-primary"
         title="Edit"
       >
@@ -71,14 +71,14 @@ export const EmployeesList = () => {
     <>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-title-md2 font-semibold text-black dark:text-white">
-          Employees
+          Suppliers
         </h2>
         <Link
-          to="/employees/new"
+          to="/inventory/suppliers/new"
           className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
         >
           <Plus className="h-5 w-5" />
-          Add Employee
+          Add Supplier
         </Link>
       </div>
 
@@ -86,7 +86,7 @@ export const EmployeesList = () => {
         <p>Loading...</p>
       ) : (
         <>
-          <Table columns={columns} data={employees} actions={actions} />
+          <Table columns={columns} data={suppliers} actions={actions} />
           <div className="mt-4">
             <Pagination
               currentPage={currentPage}

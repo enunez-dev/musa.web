@@ -99,31 +99,49 @@ export const ProductForm = () => {
 
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <InputGroup
-                label="Price"
-                name="price"
+                label="Brand"
+                name="brand"
+                register={register}
+                error={errors.brand}
+                placeholder="Enter brand"
+                customClasses="w-full xl:w-1/2"
+              />
+              <InputGroup
+                label="Barcode"
+                name="barcode"
+                register={register}
+                error={errors.barcode}
+                placeholder="Enter barcode"
+                customClasses="w-full xl:w-1/2"
+              />
+            </div>
+
+            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <InputGroup
+                label="Sale Price"
+                name="sale_price"
                 type="number"
                 register={register}
-                error={errors.price}
+                error={errors.sale_price}
                 required
                 placeholder="0.00"
                 customClasses="w-full xl:w-1/3"
               />
               <InputGroup
-                label="Cost"
-                name="cost"
+                label="Cost Price"
+                name="cost_price"
                 type="number"
                 register={register}
-                error={errors.cost}
+                error={errors.cost_price}
                 placeholder="0.00"
                 customClasses="w-full xl:w-1/3"
               />
               <InputGroup
-                label="Stock"
-                name="stock"
+                label="Min Stock Level"
+                name="min_stock_level"
                 type="number"
                 register={register}
-                error={errors.stock}
-                required
+                error={errors.min_stock_level}
                 placeholder="0"
                 customClasses="w-full xl:w-1/3"
               />

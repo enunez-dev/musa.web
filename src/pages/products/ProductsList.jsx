@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from '@/components/ui/Table';
+import Pagination from '@/components/ui/Pagination';
 import api from '@/services/api';
 import { Edit, Trash2, Plus } from 'lucide-react';
 
 export const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchProducts(currentPage);
+  }, [currentPage]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page) => {
+    setLoading(true);
     try {
-      // Mock data
-      // const response = await api.get('/products');
-      // setProducts(response.data);
-
-      setProducts([
-        { id: 1, name: 'Shampoo Hidratante', sku: 'SH-001', category: 'Hair Care', price: 25.00, stock: 50 },
-        { id: 2, name: 'Acondicionador Reparador', sku: 'AC-002', category: 'Hair Care', price: 22.50, stock: 30 },
-        { id: 3, name: 'Tinte Rojo Intenso', sku: 'TN-003', category: 'Color', price: 15.00, stock: 100 },
-      ]);
+      const response = await api.get(`/products?page=${page}&limit=${limit}`);
+      console.log('Products API Response:', response.data); // Debugging
+      setProducts(response.data.data || []);
+      setProducts(response.data.data || []);
+      setTotalPages(response.data.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -34,7 +35,7 @@ export const ProductsList = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         await api.delete(`/products/${id}`);
-        fetchProducts();
+        fetchProducts(currentPage);
       } catch (error) {
         console.error('Error deleting product:', error);
       }
@@ -45,7 +46,7 @@ export const ProductsList = () => {
     { header: 'Name', accessor: 'name' },
     { header: 'SKU', accessor: 'sku' },
     { header: 'Category', accessor: 'category' },
-    { header: 'Price', accessor: 'price', render: (row) => `$${row.price.toFixed(2)}` },
+    { header: 'Price', accessor: 'sale_price', render: (row) => `$${Number(row.sale_price || 0).toFixed(2)}` },
     { header: 'Stock', accessor: 'stock' },
   ];
 
@@ -86,7 +87,16 @@ export const ProductsList = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Table columns={columns} data={products} actions={actions} />
+        <>
+          <Table columns={columns} data={products} actions={actions} />
+          <div className="mt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </>
       )}
     </>
   );

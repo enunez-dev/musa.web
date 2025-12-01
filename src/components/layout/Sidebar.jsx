@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, ShoppingBag, Settings, LogOut, ArrowLeft, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, Users, ShoppingBag, Settings, LogOut, ArrowLeft, ChevronDown, Package, Scissors, ShoppingCart } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import SidebarLinkGroup from './SidebarLinkGroup';
 
@@ -9,14 +9,22 @@ const sidebarItems = [
     icon: LayoutDashboard,
     label: 'Dashboard',
     route: '/',
+  },
+  { icon: Users, label: 'Empleados', route: '/employees' },
+  {
+    icon: Package,
+    label: 'Inventario',
+    route: '/inventory',
     children: [
-      { label: 'eCommerce', route: '/' },
-      { label: 'Analytics', route: '/analytics' },
+      { label: 'Almacenes', route: '/inventory/warehouses' },
+      { label: 'Proveedores', route: '/inventory/suppliers' },
+      { label: 'Productos', route: '/products' },
     ],
   },
-  { icon: Users, label: 'Employees', route: '/employees' },
-  { icon: ShoppingBag, label: 'Products', route: '/products' },
-  { icon: Settings, label: 'Settings', route: '/settings' },
+  { icon: ShoppingBag, label: 'Compras', route: '/inventory/purchases' },
+  { icon: ShoppingCart, label: 'Ventas', route: '/sales' },
+  { icon: Scissors, label: 'Servicios', route: '/services' },
+  { icon: Settings, label: 'Configuración', route: '/settings' },
 ];
 
 export function Sidebar({ sidebarOpen, setSidebarOpen }) {

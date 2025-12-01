@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from '@/components/ui/Table';
+import Pagination from '@/components/ui/Pagination';
 import api from '@/services/api';
 import { Edit, Trash2, Plus } from 'lucide-react';
 
 export const ServicesList = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    fetchServices(currentPage);
+  }, [currentPage]);
 
-  const fetchServices = async () => {
+  const fetchServices = async (page) => {
+    setLoading(true);
     try {
-      // Mock data
-      // const response = await api.get('/services');
-      // setServices(response.data);
-
-      setServices([
-        { id: 1, name: 'Corte de Cabello', duration: 30, price: 35.00, commissionRate: 50 },
-        { id: 2, name: 'Tinte Completo', duration: 120, price: 120.00, commissionRate: 40 },
-        { id: 3, name: 'Manicure', duration: 45, price: 25.00, commissionRate: 60 },
-      ]);
+      const response = await api.get(`/services?page=${page}&limit=${limit}`);
+      setServices(response.data.data);
+      setServices(response.data.data || []);
+      setTotalPages(response.data.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error fetching services:', error);
     } finally {
@@ -34,7 +34,7 @@ export const ServicesList = () => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
         await api.delete(`/services/${id}`);
-        fetchServices();
+        fetchServices(currentPage);
       } catch (error) {
         console.error('Error deleting service:', error);
       }
@@ -43,9 +43,9 @@ export const ServicesList = () => {
 
   const columns = [
     { header: 'Name', accessor: 'name' },
-    { header: 'Duration (min)', accessor: 'duration' },
-    { header: 'Price', accessor: 'price', render: (row) => `$${row.price.toFixed(2)}` },
-    { header: 'Commission (%)', accessor: 'commissionRate', render: (row) => `${row.commissionRate}%` },
+    { header: 'Duration (min)', accessor: 'duration_minutes' },
+    { header: 'Price', accessor: 'base_price', render: (row) => `$${Number(row.base_price || 0).toFixed(2)}` },
+    { header: 'Commission (%)', accessor: 'default_commission_percent', render: (row) => `${row.default_commission_percent}%` },
   ];
 
   const actions = (row) => (
@@ -85,7 +85,16 @@ export const ServicesList = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Table columns={columns} data={services} actions={actions} />
+        <>
+          <Table columns={columns} data={services} actions={actions} />
+          <div className="mt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </>
       )}
     </>
   );

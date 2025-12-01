@@ -3,6 +3,7 @@ import api from '@/lib/api'
 
 export const useAuthStore = create((set) => ({
   user: null,
+  token: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),
   isLoading: false,
   error: null,
@@ -26,6 +27,7 @@ export const useAuthStore = create((set) => ({
         localStorage.setItem('token', response.data.token)
         set({
           isAuthenticated: true,
+          token: response.data.token,
           user: response.data.user || { username: credentials.username }, // Fallback if user not in response
           isLoading: false
         })
@@ -40,7 +42,8 @@ export const useAuthStore = create((set) => ({
       set({
         error: error.response?.data?.message || 'Login failed',
         isLoading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        token: null
       })
       throw error // Re-throw so the component can handle it if needed
     }
@@ -48,6 +51,6 @@ export const useAuthStore = create((set) => ({
 
   logout: () => {
     localStorage.removeItem('token')
-    set({ user: null, isAuthenticated: false })
+    set({ user: null, token: null, isAuthenticated: false })
   },
 }))

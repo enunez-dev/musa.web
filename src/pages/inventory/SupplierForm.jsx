@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { InputGroup, SelectGroup } from '@/components/ui/FormElements';
+import { InputGroup } from '@/components/ui/FormElements';
 import api from '@/services/api';
 
-export const EmployeeForm = () => {
+export const SupplierForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = !!id;
@@ -18,34 +18,33 @@ export const EmployeeForm = () => {
 
   useEffect(() => {
     if (isEditMode) {
-      fetchEmployee();
+      fetchSupplier();
     }
   }, [id]);
 
-  const fetchEmployee = async () => {
+  const fetchSupplier = async () => {
     try {
-      const response = await api.get(`/employees/${id}`);
+      const response = await api.get(`/suppliers/${id}`);
       const data = response.data;
-      // Set form values
       Object.keys(data).forEach((key) => {
         setValue(key, data[key]);
       });
     } catch (error) {
-      console.error('Error fetching employee:', error);
+      console.error('Error fetching supplier:', error);
     }
   };
 
   const onSubmit = async (data) => {
     try {
       if (isEditMode) {
-        await api.put(`/employees/${id}`, data);
+        await api.put(`/suppliers/${id}`, data);
       } else {
-        await api.post('/employees', data);
+        await api.post('/suppliers', data);
       }
-      navigate('/employees');
+      navigate('/inventory/suppliers');
     } catch (error) {
-      console.error('Error saving employee:', error);
-      alert('Error saving employee');
+      console.error('Error saving supplier:', error);
+      alert('Error saving supplier');
     }
   };
 
@@ -53,41 +52,48 @@ export const EmployeeForm = () => {
     <>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-title-md2 font-semibold text-black dark:text-white">
-          {isEditMode ? 'Edit Employee' : 'Add Employee'}
+          {isEditMode ? 'Edit Supplier' : 'Add Supplier'}
         </h2>
       </div>
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
           <h3 className="font-medium text-black dark:text-white">
-            Employee Details
+            Supplier Details
           </h3>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="p-6.5">
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <InputGroup
-                label="Full Name"
+                label="Supplier Name"
                 name="name"
                 register={register}
                 error={errors.name}
                 required
-                placeholder="Enter full name"
+                placeholder="Enter supplier name"
                 customClasses="w-full xl:w-1/2"
               />
+              <InputGroup
+                label="Contact Person"
+                name="contact_info"
+                register={register}
+                error={errors.contact_info}
+                placeholder="Enter contact person name"
+                customClasses="w-full xl:w-1/2"
+              />
+            </div>
+
+            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <InputGroup
                 label="Email"
                 name="email"
                 type="email"
                 register={register}
                 error={errors.email}
-                required
                 placeholder="Enter email address"
                 customClasses="w-full xl:w-1/2"
               />
-            </div>
-
-            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <InputGroup
                 label="Phone"
                 name="phone"
@@ -96,28 +102,24 @@ export const EmployeeForm = () => {
                 placeholder="Enter phone number"
                 customClasses="w-full xl:w-1/2"
               />
-              <InputGroup
-                label="Hire Date"
-                name="hire_date"
-                type="date"
-                register={register}
-                error={errors.hire_date}
-                customClasses="w-full xl:w-1/2"
-              />
             </div>
 
-            <div className="mb-4.5">
-              <SelectGroup
-                label="Role"
-                name="role"
+            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <InputGroup
+                label="Address"
+                name="address"
                 register={register}
-                error={errors.role}
-                required
-                options={[
-                  { value: 'ADMIN', label: 'Admin' },
-                  { value: 'STYLIST', label: 'Stylist' },
-                  { value: 'RECEPTIONIST', label: 'Receptionist' },
-                ]}
+                error={errors.address}
+                placeholder="Enter address"
+                customClasses="w-full xl:w-1/2"
+              />
+              <InputGroup
+                label="Tax ID"
+                name="tax_id"
+                register={register}
+                error={errors.tax_id}
+                placeholder="Enter Tax ID"
+                customClasses="w-full xl:w-1/2"
               />
             </div>
 
@@ -126,7 +128,7 @@ export const EmployeeForm = () => {
               disabled={isSubmitting}
               className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
             >
-              {isSubmitting ? 'Saving...' : 'Save Employee'}
+              {isSubmitting ? 'Saving...' : 'Save Supplier'}
             </button>
           </div>
         </form>
